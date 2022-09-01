@@ -1,8 +1,11 @@
+"""
+Author - Debanjan Saha
+Roll - 19CS30014
+"""
 import hashlib
-import copy
 
 def generate_hash(value):
-    hash_value = hashlib.md5(str(value).encode('utf-8')).hexdigest()
+    hash_value = hashlib.md5(str(value).encode()).hexdigest()
     return hash_value
 
 class MerkleTreeNode:

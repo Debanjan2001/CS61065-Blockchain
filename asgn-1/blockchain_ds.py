@@ -1,9 +1,14 @@
+"""
+Author - Debanjan Saha
+Roll - 19CS30014
+"""
+
 import hashlib
 
 FIXED_BLOCK_VERSION =  '02000000'
 
 def generate_hash(value):
-    hash_value = hashlib.md5(str(value).encode('utf-8')).hexdigest()
+    hash_value = hashlib.md5(str(value).encode()).hexdigest()
     return hash_value
 
 class MerkleTreeNode:
@@ -56,22 +61,24 @@ class Block:
 if __name__ == '__main__':
 
     genesis_block = Block("", generate_tree(["coinbase"]))
-    previous_block = genesis_block
 
-    blocks = int(input())
-    for b in range(blocks):
+    blocks = []
+    blocks.append(genesis_block)
+
+    num_blocks = int(input())
+    for b in range(num_blocks):
         num_transactions = int(input())
         transactions = [ str(input()) for i in range(num_transactions) ]
         md5_hash = str(input())
         merkle_root = generate_tree(transactions)
         current_block = Block(
-            prev_block_hash=previous_block.hash_value, 
+            prev_block_hash=blocks[-1].hash_value, 
             merkle_root=merkle_root
         )
 
-        if md5_hash == previous_block.hash_value:
+        if md5_hash == blocks[-1].hash_value:
             print("Valid")
         else:
             print("Invalid")
 
-        previous_block = current_block
+        blocks.append(current_block)
