@@ -1,7 +1,7 @@
 var Web3 = require('web3');
 
-// const serviceProviderURL = "https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb";
-const serviceProviderURL = "http://localhost:8545";
+const serviceProviderURL = "https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb";
+// const serviceProviderURL = "http://localhost:8545";
 
 // var web3 = new Web3(serviceProviderURL);
 // console.log("Balance: ");
@@ -79,7 +79,13 @@ const smartContractABI = [
 
 const smartContractAddress = "0x709830edf8feF92B0d879dE9ee9BdB2400BB5662";
 
-var myContract = new Contract(smartContractABI, smartContractAddress);
+var myContract = new Contract(
+    smartContractABI, 
+    smartContractAddress,
+    {
+        "from": "918ebc0ab5918990827bf6aaadd398dc77a68489",
+    },
+);
 
 const queryRollAddress = "0x8AF72Ec4f53704FfF24737f0445ddB40483eebd1";
 
@@ -89,9 +95,6 @@ myContract.methods.get(queryRollAddress).call().then(function(output) {
 
 const myRoll = "19CS30014";
 
-// myContract.methods.update(myRoll).call().then(function(output){
-//     console.log(output);
-// });
-
-// const senderAddress = "";
-// const receiverAddress = "";
+myContract.methods.update(myRoll).call().then(function(output){
+    console.log(output);
+});
