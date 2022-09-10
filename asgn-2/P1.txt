@@ -1,0 +1,157 @@
+A0: Latest Block Number
+
+curl --url https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+
+a. 15502101
+b. 
+{
+    "jsonrpc":"2.0",
+    "method":"eth_blockNumber",
+    "params":[],
+    "id":1
+}
+
+c.
+{
+    "jsonrpc":"2.0",
+    "id":1,
+    "result":"0xec8b15"
+}
+
+
+
+
+A1: Gas price
+
+## JSON-RPC over HTTPS POST
+## Replace YOUR-API-KEY with an API key from your Infura Dashboard
+## You can also replace mainnet with a different supported network
+
+curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"jsonrpc":"2.0","method":"eth_gasPrice","params": [],"id":1}'
+
+a. 20872524541
+b. 
+{
+    "jsonrpc":"2.0",
+    "method":"eth_gasPrice",
+    "params": [],
+    "id":1
+}
+c. 
+{
+    "jsonrpc":"2.0",
+    "id":1,
+    "result":"0x4dc1972fd"
+}
+
+
+
+
+A2: Get transaction count
+
+## JSON-RPC over HTTPS POST
+## Replace YOUR-API-KEY with an API key from your Infura Dashboard
+## You can also replace mainnet with a different supported network
+curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"jsonrpc":"2.0","method":"eth_getBlockTransactionCountByHash","params": ["0xe019dde137734ee91ab45fc9c614cc9d636f33ab42cc875df049d45428f870f3"],"id":1}'
+
+a.
+b.
+{
+    "jsonrpc":"2.0",
+    "method":"eth_getBlockTransactionCountByHash",
+    "params": ["0xe019dde137734ee91ab45fc9c614cc9d636f33ab42cc875df049d45428f870f3"],
+    "id":1
+}
+c. No peers now
+{
+    "jsonrpc":"2.0",
+    "id":1,
+    "result":null
+}
+
+
+
+A3: Get Transaction Receipt
+
+## JSON-RPC over HTTPS POST
+## Replace YOUR-API-KEY with an API key from your Infura Dashboard
+## You can also replace mainnet with a different supported network
+curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"jsonrpc":"2.0","method":"eth_getTransactionReceipt","params": ["0x4210f581dda42ea2a2676fefa9edf784095a30ae2b49920e0965588d8fa78bf9"],"id":1}'
+
+a. 
+b.
+{
+    "jsonrpc":"2.0",
+    "method":"eth_getTransactionReceipt",
+    "params": ["0x4210f581dda42ea2a2676fefa9edf784095a30ae2b49920e0965588d8fa78bf9"],
+    "id":1
+}
+c.
+
+
+A4: Number of peers connected to me
+
+## JSON-RPC over HTTPS POST
+## Replace YOUR-API-KEY with an API key from your Infura Dashboard
+## You can also replace mainnet with a different supported network
+curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"jsonrpc":"2.0","method":"net_peerCount","params": [],"id":1}'
+
+a.
+b.
+
+c.
+
+
+
+
+A5: Get balance
+
+## JSON-RPC over HTTPS POST
+## Replace YOUR-API-KEY with an API key from your Infura Dashboard
+## You can also replace mainnet with a different supported network
+curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"jsonrpc":"2.0","method":"eth_getBalance","params": ["0x35F18427567108F800BDC2784277B9246eED37fA", "latest"],"id":1}'
+
+a.
+b.
+
+c.
+
+
+
+A6: Get Transaction by block and index
+
+block = 5417322 = 0x52A96A
+index = 1 = 0x1
+
+## JSON-RPC over HTTPS POST
+## Replace YOUR-API-KEY with an API key from your Infura Dashboard
+## You can also replace mainnet with a different supported network
+curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"jsonrpc":"2.0","method":"eth_getTransactionByBlockNumberAndIndex","params": ["0x52A96A","0x1"],"id":1}'
+
+a.
+b.
+
+c.
+
+
