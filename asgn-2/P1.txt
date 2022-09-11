@@ -5,7 +5,7 @@ curl --url https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
     -H "Content-Type: application/json" \
     -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
 
-a. 15502101
+a. 7570865
 b. 
 {
     "jsonrpc":"2.0",
@@ -15,12 +15,7 @@ b.
 }
 
 c.
-{
-    "jsonrpc":"2.0",
-    "id":1,
-    "result":"0xec8b15"
-}
-
+{"jsonrpc":"2.0","id":1,"result":"0x7385b1"}
 
 
 
@@ -35,7 +30,7 @@ curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
     -H "Content-Type: application/json" \
     -d '{"jsonrpc":"2.0","method":"eth_gasPrice","params": [],"id":1}'
 
-a. 20872524541
+a. 100005067
 b. 
 {
     "jsonrpc":"2.0",
@@ -44,11 +39,7 @@ b.
     "id":1
 }
 c. 
-{
-    "jsonrpc":"2.0",
-    "id":1,
-    "result":"0x4dc1972fd"
-}
+{"jsonrpc":"2.0","id":1,"result":"0x5f5f4cb"}
 
 
 
@@ -63,7 +54,7 @@ curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
     -H "Content-Type: application/json" \
     -d '{"jsonrpc":"2.0","method":"eth_getBlockTransactionCountByHash","params": ["0xe019dde137734ee91ab45fc9c614cc9d636f33ab42cc875df049d45428f870f3"],"id":1}'
 
-a.
+a.35
 b.
 {
     "jsonrpc":"2.0",
@@ -71,11 +62,11 @@ b.
     "params": ["0xe019dde137734ee91ab45fc9c614cc9d636f33ab42cc875df049d45428f870f3"],
     "id":1
 }
-c. No peers now
+c.
 {
-    "jsonrpc":"2.0",
-    "id":1,
-    "result":null
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": "0x23"
 }
 
 
@@ -90,7 +81,15 @@ curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
     -H "Content-Type: application/json" \
     -d '{"jsonrpc":"2.0","method":"eth_getTransactionReceipt","params": ["0x4210f581dda42ea2a2676fefa9edf784095a30ae2b49920e0965588d8fa78bf9"],"id":1}'
 
+Find out (i) the blockNumber (integer),(ii) blockHash,(iii) cumulativeGasUsed (integer), (iv) transactionIndex (integer). 
+
 a. 
+"blockNumber": "0x52cbf2" = 5426162
+"blockHash": "0xe0018a6ff3a66fd5cb0f448c2048c4456eb238f1a4592412a92e49a1b9122817",
+"cumulativeGasUsed": "0x1c867cb" = 29910987
+"transactionIndex": "0xd4" = 212
+
+
 b.
 {
     "jsonrpc":"2.0",
@@ -98,7 +97,43 @@ b.
     "params": ["0x4210f581dda42ea2a2676fefa9edf784095a30ae2b49920e0965588d8fa78bf9"],
     "id":1
 }
-c.
+c. 
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "blockHash": "0xe0018a6ff3a66fd5cb0f448c2048c4456eb238f1a4592412a92e49a1b9122817",
+    "blockNumber": "0x52cbf2",
+    "contractAddress": null,
+    "cumulativeGasUsed": "0x1c867cb",
+    "effectiveGasPrice": "0x3b9aca00",
+    "from": "0x5217f29a4d1f96b5bc7951d95a13458cc34910df",
+    "gasUsed": "0x20a2a",
+    "logs": [
+      {
+        "address": "0x07aaec0b237ccf56b03a7c43c1c7a783da560642",
+        "blockHash": "0xe0018a6ff3a66fd5cb0f448c2048c4456eb238f1a4592412a92e49a1b9122817",
+        "blockNumber": "0x52cbf2",
+        "data": "0x000000000000000000000000000000000000000000000000d02ab486cedc0000",
+        "logIndex": "0xc7",
+        "removed": false,
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000005217f29a4d1f96b5bc7951d95a13458cc34910df",
+          "0x0000000000000000000000001111111111111111111111111111111111111111"
+        ],
+        "transactionHash": "0x4210f581dda42ea2a2676fefa9edf784095a30ae2b49920e0965588d8fa78bf9",
+        "transactionIndex": "0xd4"
+      }
+    ],
+    "logsBloom": "0x0000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000c000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000010000200000000000000000000000000000000000000000000000020000000000000000000240000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000",
+    "status": "0x1",
+    "to": "0x07aaec0b237ccf56b03a7c43c1c7a783da560642",
+    "transactionHash": "0x4210f581dda42ea2a2676fefa9edf784095a30ae2b49920e0965588d8fa78bf9",
+    "transactionIndex": "0xd4",
+    "type": "0x0"
+  }
+}
 
 
 A4: Number of peers connected to me
@@ -111,11 +146,20 @@ curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
     -H "Content-Type: application/json" \
     -d '{"jsonrpc":"2.0","method":"net_peerCount","params": [],"id":1}'
 
-a.
+a. 17
 b.
-
+{
+    "jsonrpc":"2.0",
+    "method":"net_peerCount",
+    "params": [],
+    "id":1
+}
 c.
-
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": "0x11"
+}
 
 
 
@@ -129,11 +173,20 @@ curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
     -H "Content-Type: application/json" \
     -d '{"jsonrpc":"2.0","method":"eth_getBalance","params": ["0x35F18427567108F800BDC2784277B9246eED37fA", "latest"],"id":1}'
 
-a.
+a. 1949960055592287000
 b.
-
+{
+    "jsonrpc":"2.0",
+    "method":"eth_getBalance",
+    "params": ["0x35F18427567108F800BDC2784277B9246eED37fA", "latest"],
+    "id":1
+}
 c.
-
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": "0x1b0fa656d7c77b18"
+}
 
 
 A6: Get Transaction by block and index
@@ -150,8 +203,36 @@ curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
     -d '{"jsonrpc":"2.0","method":"eth_getTransactionByBlockNumberAndIndex","params": ["0x52A96A","0x1"],"id":1}'
 
 a.
+"hash": "0x4d44e869d323cc93ed935280337cc07e3a7194810525e12b30f39cea4063562b",
+
 b.
-
+{
+    "jsonrpc":"2.0",
+    "method":"eth_getTransactionByBlockNumberAndIndex",
+    "params": ["0x52A96A","0x1"],
+    "id":1
+}
 c.
-
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "blockHash": "0x6218c39ea8f67e291c706438a2a7698419426c7de840723e82e0733d10247fc4",
+    "blockNumber": "0x52a96a",
+    "chainId": "0x5",
+    "from": "0x5c3f649ffdbc91a247ac45fc2c4c63f9319e5135",
+    "gas": "0x186a0",
+    "gasPrice": "0x12a05f200",
+    "hash": "0x4d44e869d323cc93ed935280337cc07e3a7194810525e12b30f39cea4063562b",
+    "input": "0xa9059cbb00000000000000000000000065d3aece81f66a579dcb2040f63bdfbd85177faf0000000000000000000000000000000000000000000000000e0a3cc5314d1a52",
+    "nonce": "0x5d9fe",
+    "r": "0x1f30e95087fdaffe23582d06a8fae040e0da43d03d5ab2c783ab99a67f4e61a4",
+    "s": "0x1f4a014194f68129dd41cbd795d66ff81d6c72ff004fcd5893129eb786e6caf",
+    "to": "0xf74a5ca65e4552cff0f13b116113ccb493c580c5",
+    "transactionIndex": "0x1",
+    "type": "0x0",
+    "v": "0x2d",
+    "value": "0x0"
+  }
+}
 

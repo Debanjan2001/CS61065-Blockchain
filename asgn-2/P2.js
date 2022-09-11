@@ -3,10 +3,6 @@ var Web3 = require('web3');
 const serviceProviderURL = "https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb";
 // const serviceProviderURL = "http://localhost:8545";
 
-// var web3 = new Web3(serviceProviderURL);
-// console.log("Balance: ");
-// web3.eth.getBalance("0x35F18427567108F800BDC2784277B9246eED37fA").then(console.log);
-
 var Contract = require('web3-eth-contract');
 Contract.setProvider(new Web3.providers.HttpProvider(serviceProviderURL));
 
