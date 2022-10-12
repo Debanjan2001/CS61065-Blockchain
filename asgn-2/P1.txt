@@ -60,21 +60,21 @@ A2: Get transaction count
 curl https://goerli.infura.io/v3/f035d3e9459b4b25bf8836d944f466cb \
     -X POST \
     -H "Content-Type: application/json" \
-    -d '{"jsonrpc":"2.0","method":"eth_getBlockTransactionCountByHash","params": ["0xe019dde137734ee91ab45fc9c614cc9d636f33ab42cc875df049d45428f870f3"],"id":1}'
+    -d '{"jsonrpc":"2.0","method":"eth_getBlockTransactionCountByHash","params": ["0x78f20591bc53a4a06d28cc3a841608dc8637e669999f9cc854addd0a66024e78"],"id":1}'
 
-a. 35
+a. 63
 b.
 {
     "jsonrpc":"2.0",
     "method":"eth_getBlockTransactionCountByHash",
-    "params": ["0xe019dde137734ee91ab45fc9c614cc9d636f33ab42cc875df049d45428f870f3"],
+    "params": ["0x78f20591bc53a4a06d28cc3a841608dc8637e669999f9cc854addd0a66024e78"],
     "id":1
 }
 c.
 {
   "jsonrpc": "2.0",
   "id": 1,
-  "result": "0x23"
+  "result": "0x3f"
 }
 
 
@@ -245,13 +245,14 @@ c.
 }
 
 
+P2 
 
 0x918ebc0ab5918990827bf6aaadd398dc77a68489
 0x918ebC0aB5918990827bF6AAadd398Dc77A68489
 https://etherscan.io/address/0x709830edf8fef92b0d879de9ee9bdb2400bb5662
 
 
-P2 
+secret007
 
 {
   blockHash: '0x4a2eb0ab50c1e30b396827049786288c95ae50f557e62ca6618f96c4b92b6587',
@@ -269,3 +270,7 @@ P2
   transactionIndex: 36,
   type: '0x0'
 }
+
+
+
+
