@@ -28,10 +28,10 @@ func (s *SmartContract) CreateStudent(ctx contractapi.TransactionContextInterfac
 	}
 
 	if exists {
-		return fmt.err("Student with roll %s Already exists", roll)
+		return fmt.Errorf("Student with roll %s Already exists", roll)
 	}
 
-	student = Student{
+	var student = Student{
 		name: name,
 		roll: roll,
 	}
@@ -59,13 +59,13 @@ func (s *SmartContract) ReadStudent(ctx contractapi.TransactionContextInterface,
 	}
 
 	if studentJSON == nil {
-		return nil, fmt.Errorf("The student %s does not exist", roll)
+		return "", fmt.Errorf("The student %s does not exist", roll)
 	}
 
 	var student Student
 	err = json.Unmarshal(studentJSON, &student)
 	if err != nil {
-	  return nil, err
+	  return "", err
 	}
   
 	return student.name, nil
@@ -81,18 +81,18 @@ func (s* SmartContract) ReadAllStudents(ctx contractapi.TransactionContextInterf
 
 	var students [][2]string
 	
-	for studentsIterator.hasNext() {
+	for studentsIterator.HasNext() {
 		studentResponse, err := studentsIterator.Next()
 		if err != nil {
 			return nil, err
 		}
 		var student Student
-		err := json.Unmarshal(studentResponse.Value, &student)
+		err = json.Unmarshal(studentResponse.Value, &student)
 		if err != nil {
 			return nil, err
 		}
 
-		studentData = [2]string{
+	    var	studentData = [2]string{
 			student.roll, student.name,
 		}
 
