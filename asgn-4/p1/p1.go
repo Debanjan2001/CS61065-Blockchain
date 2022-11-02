@@ -16,11 +16,6 @@ type Student struct {
 	roll 	string	`json:"Roll"`
 }
 
-func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
-	// Left
-	return nil;
-}
-
 func (s *SmartContract) CreateStudent(ctx contractapi.TransactionContextInterface, roll string, name string) error {
 	exists, err := s.StudentExists(ctx, roll)
 	if err != nil {
@@ -101,11 +96,14 @@ func (s* SmartContract) ReadAllStudents(ctx contractapi.TransactionContextInterf
 	return students, nil;
 }
 
-
-
-
-  
-  
-
-
-
+func main(){
+	chaincode, err := contractapi.NewChaincode(new(SmartContract))
+	if err != nil {
+		fmt.Printf("Error creating chaincode: %s", err.Error())
+		return
+	}
+	err = chaincode.Start();
+	if err != nil {
+		fmt.Printf("Error starting chaincode: %s", err.Error())
+	}
+}

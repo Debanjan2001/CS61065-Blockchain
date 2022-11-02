@@ -275,3 +275,15 @@ func heightOfTree(node *TreeNode) int{
 
 	return 1 + max(heightOfTree(node.Left), heightOfTree(node.Right))
 }
+
+func main(){
+	chaincode, err := contractapi.NewChaincode(new(SmartContract))
+	if err != nil {
+		fmt.Printf("Error creating chaincode: %s", err.Error())
+		return
+	}
+	err = chaincode.Start();
+	if err != nil {
+		fmt.Printf("Error starting chaincode: %s", err.Error())
+	}
+}
