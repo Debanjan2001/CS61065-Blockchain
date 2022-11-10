@@ -12,8 +12,8 @@ type SmartContract struct {
 }
 
 type Student struct {
-	name	string	`json:"Name"`
-	roll 	string	`json:"Roll"`
+	Roll 	string	`json:"Roll"`
+	Name	string	`json:"Name"`
 }
 
 func (s *SmartContract) CreateStudent(ctx contractapi.TransactionContextInterface, roll string, name string) error {
@@ -26,9 +26,9 @@ func (s *SmartContract) CreateStudent(ctx contractapi.TransactionContextInterfac
 		return fmt.Errorf("Student with roll %s Already exists", roll)
 	}
 
-	var student = Student{
-		name: name,
-		roll: roll,
+	student := Student{
+		Roll: roll,
+		Name: name,
 	}
 
 	studentJSON, err := json.Marshal(student)
@@ -63,7 +63,7 @@ func (s *SmartContract) ReadStudent(ctx contractapi.TransactionContextInterface,
 	  return "", err
 	}
   
-	return student.name, nil
+	return student.Name, nil
 }
 
 func (s* SmartContract) ReadAllStudents(ctx contractapi.TransactionContextInterface)([][2] string, error) {
@@ -88,7 +88,7 @@ func (s* SmartContract) ReadAllStudents(ctx contractapi.TransactionContextInterf
 		}
 
 	    var	studentData = [2]string{
-			student.roll, student.name,
+			student.Roll, student.Name,
 		}
 
 		students = append(students, studentData)

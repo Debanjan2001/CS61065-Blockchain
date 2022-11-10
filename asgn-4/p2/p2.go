@@ -31,9 +31,9 @@ const pk = "19CS30014-19CS10048"
 
 func (s* SmartContract)Insert(ctx contractapi.TransactionContextInterface, val int) error {
 	bst, err := s.ReadMyBST(ctx)
-	if err != nil {
-		return err
-	}
+	// if err != nil {
+	// 	return err
+	// }
 
 	if bst != nil {
 		err := s.UpdateMyBST(ctx, val, bst, 0)
@@ -70,6 +70,35 @@ func (s* SmartContract)Delete(ctx contractapi.TransactionContextInterface, val i
 
 	return nil
 }
+func preorderTraversal(node *TreeNode, str string) string {
+	if node == nil {
+		return str
+	}
+
+	if str == "" {
+		str = strconv.Itoa(node.Val)
+	} else {
+		str = str + "," + strconv.Itoa(node.Val)
+	}
+
+	str = preorderTraversal(node.Left, str)
+	str = preorderTraversal(node.Right, str)
+	return str
+}
+
+func inorderTraversal(node *TreeNode, str string) string  {
+	if node == nil {
+		return str
+	}
+	str = inorderTraversal(node.Left, str)
+	if str == "" {
+		str = strconv.Itoa(node.Val)
+	} else {
+		str = str + "," + strconv.Itoa(node.Val)
+	}
+	str = inorderTraversal(node.Right, str)
+	return str	
+}
 
 
 func (s* SmartContract)Preorder(ctx contractapi.TransactionContextInterface) (string, error) {
@@ -77,19 +106,8 @@ func (s* SmartContract)Preorder(ctx contractapi.TransactionContextInterface) (st
 	if err != nil {
 		return "", err
 	}
-
-	preorder := [] int{}
-	preorderTraversal(bst.Root, preorder)
-
-	order := ""
-	for i := 0; i< len(preorder) - 1; i++ { 
-		order = order + strconv.Itoa(preorder[i])
-		if (i != len(preorder) - 1 ){
-			order = order + ","
-		}
-	}
-
-	return order, nil
+	
+	return preorderTraversal(bst.Root, ""), nil
 }
 
 func (s* SmartContract)Inorder(ctx contractapi.TransactionContextInterface) (string, error) {
@@ -98,19 +116,7 @@ func (s* SmartContract)Inorder(ctx contractapi.TransactionContextInterface) (str
 		return "", err
 	}
 
-	inorder := [] int{}
-	inorderTraversal(bst.Root, inorder)
-
-	
-	order := ""
-	for i := 0; i < len(inorder); i++ { 
-		order = order + strconv.Itoa(inorder[i])
-		if (i != len(inorder) - 1 ){
-			order = order + ","
-		}
-	}
-	return order, nil
-	
+	return inorderTraversal(bst.Root, ""), nil
 }
 
 func (s* SmartContract)TreeHeight(ctx contractapi.TransactionContextInterface) (string, error) {
@@ -130,12 +136,11 @@ func MyBSTExists(ctx contractapi.TransactionContextInterface, key string) (bool,
 
 func (s* SmartContract)ReadMyBST(ctx contractapi.TransactionContextInterface) (*MyBST, error) {
 	bstJSON, err := ctx.GetStub().GetState(pk)
+	if bstJSON == nil {
+		return nil, err
+	}
 	if err != nil {
 		return nil, fmt.Errorf("Failed to read from world state: %v", err)
-	}
-
-	if bstJSON == nil {
-		return nil, fmt.Errorf("The bst with primary key %s does not exist", pk)
 	}
 
 	var bst *MyBST
@@ -238,27 +243,6 @@ func (node *TreeNode)DeleteValue(val int) *TreeNode {
 	}
 
 	return node
-}
-
-
-func preorderTraversal(node *TreeNode, order []int) {
-	if node == nil {
-		return 
-	}
-
-	order = append(order, node.Val)
-	preorderTraversal(node.Left, order)
-	preorderTraversal(node.Right, order)
-}
-
-func inorderTraversal(node *TreeNode, order []int) {
-	if node == nil {
-		return 
-	}
-
-	inorderTraversal(node.Left, order)
-	order = append(order, node.Val)
-	inorderTraversal(node.Right, order)
 }
 
 func max(a int, b int) int {
