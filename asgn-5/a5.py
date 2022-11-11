@@ -40,6 +40,18 @@ async def getting_verinym(from_, to):
                    from_['info']['verkey'], from_['info']['role'])
 
 
+
+async def ensure_previous_request_applied(pool_handle, checker_request, checker):
+    for _ in range(3):
+        response = json.loads(await ledger.submit_request(pool_handle, checker_request))
+        try:
+            if checker(response):
+                return json.dumps(response)
+        except TypeError:
+            pass
+        time.sleep(5)
+
+
 async def run():
 
     ###################################
@@ -122,7 +134,7 @@ async def run():
 
     await getting_verinym(steward, theUniversity)
 
-    ###########################################################
+    #####################################################################################################################
 
     ###################################
     ############# Part-B ############## 
@@ -131,7 +143,7 @@ async def run():
     # -----------------------------------------------------
     # Government creates PropertyDetails schema
 
-    print("\"Government\" -> Create \"Transcript\" Schema")
+    print("\"Government\" -> Create \"PropertyDetails\" Schema")
     property_details = {
         'name': 'PropertyDetails',
         'version': '1.0.0',
@@ -147,7 +159,7 @@ async def run():
 
     print(government['property_details_schema_id'], government['property_details_schema'])
 
-    print("\"Government\" -> Send \"Property_details\" Schema to Ledger")
+    print("\"Government\" -> Send \"PropertyDetails\" Schema to Ledger")
 
     
     schema_request = await ledger.build_schema_request(government['did'], government['property_details_schema'])
@@ -172,32 +184,98 @@ async def run():
 
     print(government['bonafide_student_schema_id'], government['bonafide_student_schema'])
 
-    print("\"Government\" -> Send \"bonafide_student\" Schema to Ledger")
+    print("\"Government\" -> Send \"BonafideStudent\" Schema to Ledger")
 
     
     schema_request = await ledger.build_schema_request(government['did'], government['bonafide_student_schema'])
     await ledger.sign_and_submit_request(government['pool'], government['wallet'], government['did'], schema_request)
     
     # -----------------------------------------------------
-    # IIT Kharagpur registers a credential definition for BonafideStudent, and the Government registers a credential definition for PropertyDetails.
-
-
+    # IIT Kharagpur registers a credential definition for BonafideStudent
     
+    print("\n\n==============================")
+    print("=== IIT Kharagpur BonafideStudent Credential Definition Setup ==")
+    print("------------------------------")
 
-    ###########################################################
+    print("\"IIT Kharagpur\" -> Get \"BonafideStudent\" Schema from Ledger")
+
+    # GET SCHEMA FROM LEDGER
+    get_schema_request = await ledger.build_get_schema_request(theUniversity['did'], bonafide_student_schema_id)
+    get_schema_response = await ensure_previous_request_applied(
+        theUniversity['pool'], get_schema_request, lambda response: response['result']['data'] is not None)
+    (theUniversity['bonafide_student_schema_id'], theUniversity['bonafide_student_schema']) = await ledger.parse_get_schema_response(get_schema_response)
+
+    # BONAFIDE_STUDENT CREDENTIAL DEFINITION
+    print("\"IIT Kharagpur\" -> Create and store in Wallet \"IIT Kharagpur BonafideStudent\" Credential Definition")
+    bonafide_student_cred_def = {
+        'tag': 'TAG1',
+        'type': 'CL',
+        'config': {"support_revocation": False}
+    }
+
+    (theUniversity['bonafide_student_cred_def_id'], theUniversity['bonafide_student_cred_def']) = \
+        await anoncreds.issuer_create_and_store_credential_def(theUniversity['wallet'], theUniversity['did'],
+                                                               theUniversity['bonafide_student_schema'], bonafide_student_cred_def['tag'],
+                                                               bonafide_student_cred_def['type'],
+                                                               json.dumps(bonafide_student_cred_def['config']))
+
+    print("\"IIT Kharagpur\" -> Send  \"IIT Kharagpur BonafideStudent\" Credential Definition to Ledger")
+    # print(theUniversity['bonafide_student_cred_def'])
+
+    cred_def_request = await ledger.build_cred_def_request(theUniversity['did'], theUniversity['bonafide_student_cred_def'])
+    # print(cred_def_request)
+    await ledger.sign_and_submit_request(theUniversity['pool'], theUniversity['wallet'], theUniversity['did'], cred_def_request)
+    print("\n\n>>>>>>>>>>>>>>>>>>>>>>.\n\n", theUniversity['bonafide_student_cred_def_id'])
+
+
+    # -----------------------------------------------------
+    # the Government registers a credential definition for PropertyDetails.
+
+    print("\n\n==============================")
+    print("=== the Government PropertyDetails Credential Definition Setup ==")
+    print("------------------------------")
+    
+    # GET SCHEMA FROM LEDGER
+    get_schema_request = await ledger.build_get_schema_request(government['did'], property_details_schema_id)
+    get_schema_response = await ensure_previous_request_applied(
+        government['pool'], get_schema_request, lambda response: response['result']['data'] is not None)
+    (government['property_details_schema_id'], government['property_details_schema']) = await ledger.parse_get_schema_response(get_schema_response)
+
+    # PROPERTY_DETAILS CREDENTIAL DEFINITION
+    print("\"Government\" -> Create and store in Wallet \"Government PropertyDetails\" Credential Definition")
+    property_details_cred_def = {
+        'tag': 'TAG2',
+        'type': 'CL',
+        'config': {"support_revocation": False}
+    }
+    (government['property_details_cred_def_id'], government['property_details_cred_def']) = \
+        await anoncreds.issuer_create_and_store_credential_def(government['wallet'], government['did'],
+                                                               government['property_details_schema'], property_details_cred_def['tag'],
+                                                               property_details_cred_def['type'],
+                                                               json.dumps(property_details_cred_def['config']))
+
+    print("\"government\" -> Send  \"government PropertyDetails\" Credential Definition to Ledger")
+    # print(government['property_details_cred_def'])
+
+    cred_def_request = await ledger.build_cred_def_request(government['did'], government['property_details_cred_def'])
+    # print(cred_def_request)
+    await ledger.sign_and_submit_request(government['pool'], government['wallet'], government['did'], cred_def_request)
+    print("\n\n>>>>>>>>>>>>>>>>>>>>>>.\n\n", government['property_details_cred_def_id'])
+
+    #####################################################################################################################
 
     ###################################
     ############# Part-C ############## 
     ###################################
 
-    ###########################################################
+    #####################################################################################################################
 
 
     ###################################
     ############# Part-D ############## 
     ###################################
 
-    ###########################################################
+    #####################################################################################################################
 
 
 
