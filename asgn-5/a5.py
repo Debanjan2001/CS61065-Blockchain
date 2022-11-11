@@ -52,6 +52,15 @@ async def ensure_previous_request_applied(pool_handle, checker_request, checker)
         time.sleep(5)
 
 
+async def get_cred_def(pool_handle, _did, cred_def_id):
+    get_cred_def_request = await ledger.build_get_cred_def_request(_did, cred_def_id)
+    get_cred_def_response = \
+        await ensure_previous_request_applied(pool_handle, get_cred_def_request,
+                                              lambda response: response['result']['data'] is not None)
+    return await ledger.parse_get_cred_def_response(get_cred_def_response)
+
+
+
 async def run():
 
     ###################################
@@ -267,6 +276,172 @@ async def run():
     ###################################
     ############# Part-C ############## 
     ###################################
+
+    # ------------------------------------------------------------
+    #  Sunil setting up his wallet
+    print("== Sunil setup ==")
+    print("------------------------------")
+
+    sunil = {
+        'name': 'Sunil',
+        'wallet_config': json.dumps({'id': 'sunil_wallet'}),
+        'wallet_credentials': json.dumps({'key': 'sunil_wallet_key'}),
+        'pool': pool_['handle'],
+    }
+
+    await create_wallet(sunil)
+    (sunil['did'], sunil['key']) = await did.create_and_store_my_did(sunil['wallet'], "{}")
+
+    # ------------------------------------------------------------
+    #  Sunil getting PropertyDetails credential from Government
+    print("==============================")
+    print("=== Getting PropertyDetails with government ==")
+    print("==============================")
+    
+    # Government creates PropertyDetails Credential offer
+
+    print("\"government\" -> Create \"PropertyDetails\" Credential Offer for Sunil")
+    government['property_details_cred_offer'] = \
+        await anoncreds.issuer_create_credential_offer(government['wallet'], government['property_details_cred_def_id'])
+
+    print("\"government\" -> Send \"PropertyDetails\" Credential Offer to Sunil")
+    
+    # Over Network 
+    sunil['property_details_cred_offer'] = government['property_details_cred_offer']
+
+    print(sunil['property_details_cred_offer'])
+
+    # Sunil prepares a PropertyDetails credential request
+
+    property_details_cred_offer_object = json.loads(sunil['property_details_cred_offer'])
+
+    sunil['property_details_schema_id'] = property_details_cred_offer_object['schema_id']
+    sunil['property_details_cred_def_id'] = property_details_cred_offer_object['cred_def_id']
+
+    print("\"Sunil\" -> Create and store \"Sunil\" Master Secret in Wallet")
+    sunil['master_secret_id'] = await anoncreds.prover_create_master_secret(sunil['wallet'], None)
+
+    print("\"Sunil\" -> Get \"government PropertyDetails\" Credential Definition from Ledger")
+    (sunil['property_details_cred_def_id'], sunil['property_details_cred_def']) = \
+        await get_cred_def(sunil['pool'], sunil['did'], sunil['property_details_cred_def_id'])
+
+    print("\"Sunil\" -> Create \"PropertyDetails\" Credential Request for government")
+    (sunil['property_details_cred_request'], sunil['property_details_cred_request_metadata']) = \
+        await anoncreds.prover_create_credential_req(sunil['wallet'], sunil['did'],
+                                                     sunil['property_details_cred_offer'],
+                                                     sunil['property_details_cred_def'],
+                                                     sunil['master_secret_id'])
+
+    print("\"Sunil\" -> Send \"PropertyDetails\" Credential Request to government")
+
+    # Over Network
+    government['property_details_cred_request'] = sunil['property_details_cred_request']
+
+
+    # government issues credential to Sunil ----------------
+    print("\"government\" -> Create \"PropertyDetails\" Credential for Sunil")
+    government['sunil_property_details_cred_values'] = json.dumps({
+        "owner_first_name": {"raw": "Sunil", "encoded": "5893255682023721427"},
+        "owner_last_name": {"raw": "Dey", "encoded": "1327274877492361491"},
+        "address_of_property": {"raw": "M G Road, Chennai", "encoded": "2508559170611499072"},
+        "owner_since_year": {"raw": "2005", "encoded": "2005"},
+        "property_value_estimate": {"raw": "1000000", "encoded": "1000000"},
+    })
+    
+    government['property_details_cred'], _, _ = \
+        await anoncreds.issuer_create_credential(government['wallet'], government['property_details_cred_offer'],
+                                                 government['property_details_cred_request'],
+                                                 government['sunil_property_details_cred_values'], None, None)
+
+    print("\"government\" -> Send \"PropertyDetails\" Credential to Sunil")
+    print(government['property_details_cred'])
+    # Over the network
+    sunil['property_details_cred'] = government['property_details_cred']
+
+    print("\"Sunil\" -> Store \"PropertyDetails\" Credential from government")
+    _, sunil['property_details_cred_def'] = await get_cred_def(sunil['pool'], sunil['did'],
+                                                         sunil['property_details_cred_def_id'])
+
+    await anoncreds.prover_store_credential(sunil['wallet'], None, sunil['property_details_cred_request_metadata'],
+                                            sunil['property_details_cred'], sunil['property_details_cred_def'], None)
+    
+    print("\n\n>>>>>>>>>>>>>>>>>>>>>>.\n\n", sunil['property_details_cred_def'])
+
+    # ------------------------------------------------------------
+    #  Sunil getting BonafideStudent credential from IIT Kharagpur
+
+    print("==============================")
+    print("=== Getting BonafideStudent with IIT Kharagpur ==")
+    print("==============================")
+    
+    # IIT Kharagpur creates BonafideStudent Credential offer
+
+    print("\"IIT Kharagpur\" -> Create \"BonafideStudent\" Credential Offer for Sunil")
+    theUniversity['bonafide_student_cred_offer'] = \
+        await anoncreds.issuer_create_credential_offer(theUniversity['wallet'], theUniversity['bonafide_student_cred_def_id'])
+
+    print("\"IIT Kharagpur\" -> Send \"BonafideStudent\" Credential Offer to Sunil")
+    
+    # Over Network 
+    sunil['bonafide_student_cred_offer'] = theUniversity['bonafide_student_cred_offer']
+
+    print(sunil['bonafide_student_cred_offer'])
+
+    # Sunil prepares a PropertyDetails credential request
+
+    bonafide_student_cred_offer_object = json.loads(sunil['bonafide_student_cred_offer'])
+
+    sunil['bonafide_student_schema_id'] = bonafide_student_cred_offer_object['schema_id']
+    sunil['bonafide_student_cred_def_id'] = bonafide_student_cred_offer_object['cred_def_id']
+
+    print("\"Sunil\" -> Create and store \"Sunil\" Master Secret in Wallet")
+    sunil['master_secret_id'] = await anoncreds.prover_create_master_secret(sunil['wallet'], None)
+
+    print("\"Sunil\" -> Get \"government BonafideStudent\" Credential Definition from Ledger")
+    (sunil['bonafide_student_cred_def_id'], sunil['bonafide_student_cred_def']) = \
+        await get_cred_def(sunil['pool'], sunil['did'], sunil['bonafide_student_cred_def_id'])
+
+    print("\"Sunil\" -> Create \"BonafideStudent\" Credential Request for IIT Kharagpur")
+    (sunil['bonafide_student_cred_request'], sunil['bonafide_student_cred_request_metadata']) = \
+        await anoncreds.prover_create_credential_req(sunil['wallet'], sunil['did'],
+                                                     sunil['bonafide_student_cred_offer'],
+                                                     sunil['bonafide_student_cred_def'],
+                                                     sunil['master_secret_id'])
+
+    print("\"Sunil\" -> Send \"BonafideStudent\" Credential Request to IIT Kharagpur")
+
+    # Over Network
+    theUniversity['bonafide_student_cred_request'] = sunil['bonafide_student_cred_request']
+
+    # IIT Kharagpur issues credential to Sunil ----------------
+    print("\"IIT Kharagpur\" -> Create \"BonafideStudent\" Credential for Sunil")
+    theUniversity['sunil_bonafide_student_cred_values'] = json.dumps({
+        "student_first_name": {"raw": "Sunil", "encoded": "5893255682023721427"},
+        "student_last_name": {"raw": "Dey", "encoded": "1327274877492361491"},
+        "degree_name": {"raw": "Mtech", "encoded": "1564044317497562940"},
+        "student_since_year": {"raw": "2022", "encoded": "2022"},
+        "cgpa": {"raw": "8", "encoded": "8"},
+    })
+    
+    theUniversity['bonafide_student_cred'], _, _ = \
+        await anoncreds.issuer_create_credential(theUniversity['wallet'], theUniversity['bonafide_student_cred_offer'],
+                                                 theUniversity['bonafide_student_cred_request'],
+                                                 theUniversity['sunil_bonafide_student_cred_values'], None, None)
+
+    print("\"IIT Kharagpur\" -> Send \"BonafideStudent\" Credential to Sunil")
+    print(theUniversity['bonafide_student_cred'])
+    # Over the network
+    sunil['bonafide_student_cred'] = theUniversity['bonafide_student_cred']
+
+    print("\"Sunil\" -> Store \"BonafideStudent\" Credential from IIT Kharagpur")
+    _, sunil['bonafide_student_cred_def'] = await get_cred_def(sunil['pool'], sunil['did'],
+                                                         sunil['bonafide_student_cred_def_id'])
+
+    await anoncreds.prover_store_credential(sunil['wallet'], None, sunil['bonafide_student_cred_request_metadata'],
+                                            sunil['bonafide_student_cred'], sunil['bonafide_student_cred_def'], None)
+    
+    print("\n\n>>>>>>>>>>>>>>>>>>>>>>.\n\n", sunil['bonafide_student_cred_def'])
+
 
     #####################################################################################################################
 
