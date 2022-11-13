@@ -376,7 +376,7 @@ async def run():
     # PROPERTY_DETAILS CREDENTIAL DEFINITION
     print("\"Government\" -> Create and store in Wallet \"Government PropertyDetails\" Credential Definition")
     property_details_cred_def = {
-        'tag': 'TAG2',
+        'tag': 'TAG1',
         'type': 'CL',
         'config': {"support_revocation": False}
     }
@@ -407,8 +407,8 @@ async def run():
 
     sunil = {
         'name': 'Sunil',
-        'wallet_config': json.dumps({'id': 'sunil_wallet'}),
-        'wallet_credentials': json.dumps({'key': 'sunil_wallet_key'}),
+        'wallet_config': json.dumps({'id': 'alice_wallet'}),
+        'wallet_credentials': json.dumps({'key': 'alice_wallet_key'}),
         'pool': pool_['handle'],
     }
 
@@ -725,18 +725,18 @@ async def run():
     #####################################
     ####### Changes left   ##############
     #####################################
-    # assert 'Mtech' == loan_application_proof_object['requested_proof']['revealed_attrs']['attr3_referent']['raw']
-    # assert 'graduated' == loan_application_proof_object['requested_proof']['revealed_attrs']['attr4_referent']['raw']
-    # assert '023-45-6789' == loan_application_proof_object['requested_proof']['revealed_attrs']['attr5_referent']['raw']
-    # assert 'Alice' == loan_application_proof_object['requested_proof']['self_attested_attrs']['attr1_referent']
-    # assert 'Garcia' == loan_application_proof_object['requested_proof']['self_attested_attrs']['attr2_referent']
-    # assert '023-45-6789' == loan_application_proof_object['requested_proof']['self_attested_attrs']['attr6_referent']
+    assert 'Sunil' == loan_application_proof_object['requested_proof']['self_attested_attrs']['attr1_referent']
+    assert 'Dey' == loan_application_proof_object['requested_proof']['self_attested_attrs']['attr2_referent']
+    assert 'Mtech' == loan_application_proof_object['requested_proof']['revealed_attrs']['attr3_referent']['raw']
+    assert 'M G Road, Chennai' == loan_application_proof_object['requested_proof']['revealed_attrs']['attr4_referent']['raw']
+    assert '2005' == loan_application_proof_object['requested_proof']['revealed_attrs']['attr5_referent']['raw']
 
-    # assert await anoncreds.verifier_verify_proof(theCompany['loan_application_proof_request'], theCompany['loan_application_proof'],
-    #                                              theCompany['schemas_for_loan_application'],
-    #                                              theCompany['cred_defs_for_loan_application'],
-    #                                              theCompany['revoc_ref_defs_for_loan_application'],
-    #                                              theCompany['revoc_regs_for_loan_application'])
+    assert await anoncreds.verifier_verify_proof(theCompany['loan_application_proof_request'], theCompany['loan_application_proof'],
+                                                 theCompany['schemas_for_loan_application'],
+                                                 theCompany['cred_defs_for_loan_application'],
+                                                 theCompany['revoc_ref_defs_for_loan_application'],
+                                                 theCompany['revoc_regs_for_loan_application'])
+
 
     #####################################################################################################################
 
